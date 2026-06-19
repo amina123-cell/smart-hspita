@@ -1,0 +1,45 @@
+.add-nurse-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  direction: rtl;
+}
+
+.nurse-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 1rem;
+  background: blue;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}
+
+.success-toast {
+  background: green;
+  color: white;
+  padding: 10px;
+}
+
+.error-toast {
+  background: red;
+  color: white;
+  padding: 10px;
+}

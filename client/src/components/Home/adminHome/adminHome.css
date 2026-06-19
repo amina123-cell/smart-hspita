@@ -1,0 +1,211 @@
+.admin-home-container {
+  padding: 2rem;
+  background-color: #f1f5f9; /* خلفية رمادية فاتحة جداً */
+  min-height: 100vh;
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* --- Header Card --- */
+.admin-header-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.admin-avatar {
+  width: 70px;
+  height: 70px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  overflow: hidden;
+  margin-left: 1.5rem;
+}
+
+.admin-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.admin-info h2 { margin: 0; color: #1e293b; font-size: 1.5rem; }
+.admin-role { color: #64748b; font-size: 0.9rem; display: block; margin-top: 4px; }
+.admin-email { color: #94a3b8; font-size: 0.85rem; margin: 0; }
+
+.admin-actions-header {
+  display: flex;
+  gap: 1rem;
+}
+
+/* --- Stats Grid --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-right: 4px solid transparent;
+}
+
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+.stat-icon { font-size: 2rem; }
+.stat-value { font-size: 1.8rem; font-weight: bold; color: #1e293b; display: block; }
+.stat-label { color: #64748b; font-size: 0.9rem; }
+
+/* ألوان البطاقات */
+.stat-card.blue { border-right-color: #3b82f6; }
+.stat-card.indigo { border-right-color: #6366f1; }
+.stat-card.cyan { border-right-color: #06b6d4; }
+.stat-card.emerald { border-right-color: #10b981; }
+
+/* --- Tabs --- */
+.admin-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1px;
+}
+
+.tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 600;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab.active { color: #3b82f6; }
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #3b82f6;
+  border-radius: 3px 3px 0 0;
+}
+
+/* --- Overview Content --- */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.overview-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.overview-card h4 { margin-top: 0; color: #334155; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+
+.recent-list { list-style: none; padding: 0; margin: 0; }
+.recent-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+}
+.recent-list .date { font-size: 0.8rem; color: #94a3b8; }
+
+.quick-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-sm { padding: 8px 16px; font-size: 0.9rem; background: #f1f5f9; border: none; border-radius: 6px; cursor: pointer; }
+.btn-sm:hover { background: #e2e8f0; }
+
+/* --- Users Table --- */
+.users-table-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.table-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.search-input, .filter-select {
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+}
+.search-input { flex: 1; }
+
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th { text-align: right; padding: 12px; color: #64748b; border-bottom: 2px solid #f1f5f9; font-size: 0.9rem; }
+.admin-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+
+.user-cell { display: flex; align-items: center; gap: 10px; }
+.user-avatar-small {
+  width: 35px; height: 35px; background: #e0f2fe; color: #0284c7;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;
+}
+
+.role-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+.role-badge.patient { background: #dbeafe; color: #1e40af; }
+.role-badge.doctor { background: #e0e7ff; color: #3730a3; }
+.role-badge.nurse { background: #ccfbf1; color: #0f766e; }
+
+.status-badge.active { color: #10b981; background: #ecfdf5; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+.status-badge.inactive { color: #ef4444; background: #fef2f2; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+
+.actions-cell { display: flex; gap: 5px; }
+.action-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; opacity: 0.7; transition: 0.2s; }
+.action-btn:hover { opacity: 1; transform: scale(1.1); }
+
+.table-footer { margin-top: 1rem; color: #94a3b8; font-size: 0.85rem; text-align: left; }
+
+/* --- Settings --- */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.setting-card {
+  background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.setting-card h4 { margin-top: 0; }
+
+/* --- Buttons --- */
+.btn {
+  padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
+}
+.btn-primary { background: #3b82f6; color: white; }
+.btn-primary:hover { background: #2563eb; }
+.btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
+.btn-outline:hover { background: #f8fafc; color: #334155; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-header-card { flex-direction: column; text-align: center; gap: 1rem; }
+  .admin-avatar { margin: 0 auto; }
+  .table-controls { flex-direction: column; }
+}

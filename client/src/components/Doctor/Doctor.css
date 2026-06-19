@@ -1,0 +1,95 @@
+/* Action Cell */
+.action-cell {
+  text-align: center;
+}
+
+/* Delete Button - Red */
+.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #cc0000;
+  transform: scale(1.05);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.treated {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Table Styles */
+.patient-container {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.patient-container h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.patient-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.patient-table thead {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+
+.patient-table th,
+.patient-table td {
+  padding: 12px 15px;
+}
+
+.patient-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+  transition: background-color 0.2s ease;
+}
+
+.patient-table tbody tr:hover {
+  background-color: #f3f3f3;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+

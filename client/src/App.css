@@ -1,0 +1,309 @@
+/* ============================================
+   🏥 MediCare Pro - Modern Design System
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* 🎨 الألوان الطبية العصرية */
+  --primary: #0ea5e9;
+  --primary-dark: #0284c7;
+  --primary-light: #e0f2fe;
+  --secondary: #10b981;
+  --secondary-light: #d1fae5;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  
+  /* 🖼️ الخلفيات والنصوص */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-focus: #bae6fd;
+  
+  /* 📐 الأشكال والظلال */
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 50px;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  
+  /* ⚡ الحركة */
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 🌍 إعادة ضبط أساسية */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  direction: rtl;
+  min-height: 100vh;
+}
+
+/* 📦 الهيكل الرئيسي */
+.App { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* 🔝 الهيدر */
+.app-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  padding: 1.2rem 2rem;
+  box-shadow: var(--shadow-md);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-content {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.logo-wrapper { display: flex; align-items: center; gap: 0.8rem; }
+.logo-icon { font-size: 2.2rem; }
+.app-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+.title-main { color: #fff; }
+.title-highlight { color: #38bdf8; }
+.title-sub { font-size: 1rem; color: #94a3b8; }
+.app-subtitle { font-size: 0.8rem; color: #cbd5e1; margin-top: 0.2rem; }
+
+.user-info { display: flex; align-items: center; gap: 1rem; }
+.user-role-badge {
+  background: rgba(255,255,255,0.12);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(6px);
+}
+
+/* 🔘 شريط التنقل */
+.navigation {
+  background: var(--surface);
+  padding: 0.8rem 2rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 70px; z-index: 90;
+}
+.nav-wrapper {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+}
+.nav-btn {
+  background: transparent;
+  border: 2px solid transparent;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+.nav-btn.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-dark);
+}
+
+/* 📦 المحتوى الرئيسي */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  animation: fadeSlide 0.4s ease;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🗂️ البطاقات */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+/* 🔘 الأزرار */
+.btn {
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  font-size: 0.95rem;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); box-shadow: var(--shadow-glow); }
+.btn-secondary { background: var(--secondary); color: white; }
+.btn-secondary:hover { background: #059669; }
+.btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* 📝 النماذج */
+.form-group { margin-bottom: 1.2rem; }
+.form-group label {
+  display: block; margin-bottom: 0.5rem;
+  font-weight: 500; color: var(--text);
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 0.8rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  background: var(--bg);
+  transition: var(--transition);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
+  background: white;
+}
+.form-textarea { resize: vertical; min-height: 100px; }
+
+/* 📊 الجداول */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+.modern-table {
+  width: 100%; border-collapse: collapse; min-width: 700px;
+}
+.modern-table thead { background: var(--bg); }
+.modern-table th, .modern-table td {
+  padding: 1rem; text-align: right; border-bottom: 1px solid var(--border);
+}
+.modern-table th { font-weight: 600; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
+.modern-table tbody tr:hover { background: var(--primary-light); }
+.badge {
+  padding: 0.3rem 0.7rem; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600; display: inline-block;
+}
+.badge-primary { background: var(--primary-light); color: var(--primary); }
+.badge-success { background: var(--secondary-light); color: #047857; }
+.badge-danger { background: var(--danger-light); color: var(--danger); }
+.badge-warning { background: var(--warning-light); color: #b45309; }
+
+/* 🔔 الشعارات والتحميل */
+.loader {
+  display: flex; justify-content: center; align-items: center;
+  height: 200px; color: var(--text-muted);
+}
+.empty-state, .error-state {
+  text-align: center; padding: 3rem; color: var(--text-muted);
+  background: var(--surface); border-radius: var(--radius-lg); border: 1px dashed var(--border);
+}
+
+/* 📱 التجاوب */
+@media (max-width: 1024px) {
+  .app-header { padding: 1rem; }
+  .navigation { padding: 0.8rem 1rem; top: 60px; }
+  .nav-btn { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .main-content { padding: 1.5rem; }
+}
+@media (max-width: 768px) {
+  .header-content { flex-direction: column; text-align: center; }
+  .nav-wrapper { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem; }
+  .nav-btn { white-space: nowrap; flex-shrink: 0; }
+  .main-content { padding: 1rem; }
+  .card { padding: 1.2rem; }
+}
+/* ============================================
+   🌙 Dark Mode Support
+   ============================================ */
+[data-theme="dark"] {
+  --bg-page: #0f172a;
+  --bg-card: #1e293b;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --input-bg: #0f172a;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .app-header {
+  background: linear-gradient(135deg, #020617 0%, #1e293b 100%);
+}
+
+[data-theme="dark"] .navigation {
+  background: var(--bg-card);
+  border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .nav-btn {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .nav-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .nav-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+[data-theme="dark"] .main-content {
+  background: var(--bg-page);
+}
+
+/* 🔘 زر تبديل الوضع */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition, 0.2s);
+  backdrop-filter: blur(6px);
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* 📱 للموبايل */
+@media (max-width: 768px) {
+  .user-info {
+    gap: 0.6rem;
+  }
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+}
+.App {
+  border: 5px solid red; /* إطار أحمر لترى حدود التطبيق */
+  min-height: 100vh;
+  background-color: #f0f2f5; /* لون خلفية واضح */
+}

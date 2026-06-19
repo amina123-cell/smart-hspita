@@ -1,0 +1,144 @@
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f1f5f9;
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: #1e293b;
+  color: white;
+  transition: 0.3s;
+  padding: 1.5rem;
+}
+.sidebar-header h2 { margin: 0; font-size: 1.5rem; }
+.sidebar-nav { margin-top: 2rem; display: flex; flex-direction: column; gap: 10px; }
+.nav-item {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 12px;
+  text-align: right;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+.nav-item:hover, .nav-item.active { background: #334155; color: white; }
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-right: 5px solid;
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.stat-value { font-size: 1.8rem; font-weight: bold; color: #1e293b; }
+.stat-label { color: #64748b; font-size: 0.9rem; }
+
+/* Table & Forms */
+.card-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.modern-table th { text-align: right; padding: 12px; color: #64748b; border-bottom: 2px solid #f1f5f9; }
+.modern-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+.role-badge { font-weight: bold; padding: 4px 10px; border-radius: 20px; background: #f8fafc; }
+
+.add-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form-input, .form-select {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.action-btn.delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
