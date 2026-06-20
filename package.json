@@ -1,0 +1,36 @@
+{
+  "name": "react-fullstack",
+  "version": "1.0.0",
+  "description": "Full-stack React + Express application",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "npm run dev --prefix server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently -c \"blue,magenta\" -n \"SERVER,CLIENT\" \"npm run server\" \"npm run client\"",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "build": "npm run build --prefix client"
+  },
+  "keywords": [
+    "react",
+    "express",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "axios": "^1.17.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "react-toastify": "^11.1.0",
+    "uuid": "^14.0.0"
+  }
+}
