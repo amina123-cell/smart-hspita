@@ -4,14 +4,14 @@ const express = require("express");
 
 const router = express.Router();
 
-// ✅ تحديد إشعار كمقروء
-router.put("/:notificationId", async (req, res) => {
+// ✅ تحديد إشعار كمقروء (تم تعديل المسار ليتوافق مع الواجهة)
+router.put("/:notificationId/read", async (req, res) => {
   try {
     await connectDB();
     const { notificationId } = req.params;
     
     await Notification.findByIdAndUpdate(notificationId, { isRead: true });
-    res.json({ message: "Notification marked as read" });
+    res.json({ success: true, message: "Notification marked as read" });
   } catch (error) {
     console.error("💥 Mark as Read Error:", error.message);
     res.status(500).json({ message: "Server Error", error: error.message });
@@ -19,7 +19,7 @@ router.put("/:notificationId", async (req, res) => {
 });
 
 // ✅ تحديد كل الإشعارات كمقروءة
-router.put("/mark-all/:userId", async (req, res) => {
+router.put("/mark-all-read/:userId", async (req, res) => {
   try {
     await connectDB();
     const { userId } = req.params;
@@ -28,7 +28,7 @@ router.put("/mark-all/:userId", async (req, res) => {
       { userId, isRead: false },
       { isRead: true }
     );
-    res.json({ message: "All notifications marked as read" });
+    res.json({ success: true, message: "All notifications marked as read" });
   } catch (error) {
     console.error("💥 Mark All as Read Error:", error.message);
     res.status(500).json({ message: "Server Error", error: error.message });

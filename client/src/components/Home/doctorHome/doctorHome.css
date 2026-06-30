@@ -1,6 +1,6 @@
 .doctor-home-container {
   padding: 2rem;
-  background-color: #f8fafc; /* خلفية رمادية فاتحة جداً */
+  background-color: #f8fafc;
   min-height: 100vh;
   font-family: 'Tajawal', sans-serif;
 }
@@ -21,12 +21,20 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   text-align: center;
   height: fit-content;
-  border-top: 5px solid #3b82f6; /* لون أزرق مميز للأطباء */
+  border-top: 5px solid #3b82f6;
 }
 
 .doctor-avatar {
   background: #eff6ff;
   color: #1d4ed8;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
 }
 
 .specialty-badge {
@@ -72,6 +80,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .action-card {
@@ -106,20 +115,99 @@
   color: #64748b;
 }
 
-/* Buttons */
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
+/* ✅ ✅ ✅ قائمة الانتظار الذكية */
+.waiting-list-section {
+  margin-top: 2rem;
+  border-top: 2px dashed #e2e8f0;
+  padding-top: 1.5rem;
 }
 
-.btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #64748b; }
-.btn-outline:hover { background: #f8fafc; color: #334155; }
-.full-width { width: 100%; }
+.waiting-list-section h4 {
+  margin-bottom: 1rem;
+  color: #334155;
+}
+
+.queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.queue-item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.queue-item:hover {
+  background: #f8fafc;
+  transform: translateX(-5px);
+}
+
+/* تأثير النبض للحالات الحرجة */
+.critical-item {
+  animation: pulse-red 2s infinite;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.queue-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.triage-tag {
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: fit-content;
+}
+
+.mini-vitals {
+  font-size: 0.8rem;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #94a3b8;
+  padding: 20px;
+  font-style: italic;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  background: #3b82f6;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-sm:hover { background: #2563eb; }
 
 @media (max-width: 768px) {
   .doctor-dashboard-grid { grid-template-columns: 1fr; }
+  .queue-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .btn-sm { width: 100%; }
 }

@@ -1,8 +1,9 @@
-const connectDB = require("../../database/dbconnection");
 const Consultation = require("../../models/ConsultationModel");
 const Notification = require("../../models/NotificationModel");
+const TriageLog = require("../../models/triageLogModel");
 const Patient = require("../../models/patientModel");
 const Doctor = require("../../models/doctorModel");
+const Admin = require("../../models/adminModel"); // ✅ استيراد موديل الأدمن
 const mongoose = require("mongoose");
 const express = require("express");
 
@@ -10,9 +11,10 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-    await connectDB();
-    
-    const { doctorId, patientId, nurseId, type, priority, notes, consultationDate } = req.body;
+    const { 
+      doctorId, patientId, nurseId, type, notes, consultationDate,
+      triageLevel, vitalSigns, triageSource, reason, userId, userModel 
+    } = req.body;
 
     // ✅ 1. التحقق من البيانات الأساسية
     if (!doctorId || !patientId || !type || !notes) {
@@ -68,24 +70,47 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // ✅ 6. إنشاء الاستشارة الجديدة
+    // ✅ 6. إنشاء الاستشارة الجديدة مع الحقول الحديثة
     const newConsultation = new Consultation({
       doctorId: parsedDoctorId,
       patientId: new mongoose.Types.ObjectId(patientId),
       nurseId: nurseId ? new mongoose.Types.ObjectId(nurseId) : null,
       type,
-      priority: priority ? Number(priority) : 2,
       notes: notes.trim(),
       consultationDate: finalDate,
-      status: 'Pending'
+      status: 'Pending',
+      
+      // ✅ حفظ حقول التريج والعلامات الحيوية
+      triageLevel: triageLevel || 'LEVEL_3',
+      triageSource: triageSource || 'SELF_REPORTED',
+      vitalSigns: vitalSigns ? {
+        ...vitalSigns,
+        enteredBy: vitalSigns.enteredBy || 'DOCTOR'
+      } : undefined,
+      selfReportedSymptoms: []
     });
 
     await newConsultation.save();
 
-    // ✅ 7. إنشاء إشعار للطبيب
+    // ✅ 7. تسجيل التغيير الأولي في Audit Log (إذا كان هناك سبب)
+    if (reason && triageLevel) {
+      await TriageLog.create({
+        consultationId: newConsultation._id,
+        oldLevel: 'LEVEL_3',
+        newLevel: triageLevel,
+        changedBy: userId || parsedDoctorId,
+        changedByModel: userModel || 'Doctor',
+        reason: reason,
+        vitalSignsSnapshot: vitalSigns || {}
+      });
+    }
+
+    // ✅ 8. إنشاء الإشعارات (للطبيب، الممرض، المريض، والأدمن)
     try {
       const patientName = `${patient.firstName || ''} ${patient.lastName || patient.familyName || ''}`.trim() || 'مريض جديد';
+      const doctorName = `${doctor.firstName || ''} ${doctor.lastName || ''}`.trim();
 
+      // أ- إشعار للطبيب
       await new Notification({
         userId: parsedDoctorId,
         type: 'consultation',
@@ -96,12 +121,43 @@ router.post("/", async (req, res) => {
           patientId: patient._id,
           patientName: patientName,
           type: type,
-          priority: newConsultation.priority
+          triageLevel: newConsultation.triageLevel
         },
         isRead: false
       }).save();
 
-      // ✅ 8. إذا كان فيه ممرض، بعث ليه إشعار أيضاً
+      // ب- إشعار للمريض (تأكيد الطلب)
+      await new Notification({
+        userId: new mongoose.Types.ObjectId(patientId),
+        type: 'consultation_status',
+        title: '✅ تم استلام طلبك',
+        message: `تم تسجيل استشارتك مع د. ${doctorName} بنجاح.`,
+        data: {
+          consultationId: newConsultation._id,
+          doctorName: doctorName,
+          status: 'Pending'
+        },
+        isRead: false
+      }).save();
+
+      // ج- إشعار للأدمن (للمتابعة العامة)
+      const admins = await Admin.find({}, '_id');
+      for (const admin of admins) {
+        await new Notification({
+          userId: admin._id,
+          type: 'system_alert',
+          title: '📋 استشارة جديدة في النظام',
+          message: `المريض ${patientName} قام بطلب استشارة ${type}.`,
+          data: {
+            consultationId: newConsultation._id,
+            patientId: patientId,
+            doctorId: doctorId
+          },
+          isRead: false
+        }).save();
+      }
+
+      // د- إذا كان فيه ممرض، بعث ليه إشعار أيضاً
       if (nurseId) {
         try {
           const Nurse = require("../../models/NurseModel");
@@ -118,22 +174,21 @@ router.post("/", async (req, res) => {
                 patientId: patient._id,
                 patientName: patientName,
                 type: type,
-                doctorName: `${doctor.firstName || ''} ${doctor.lastName || ''}`.trim()
+                doctorName: doctorName,
+                triageLevel: newConsultation.triageLevel
               },
               isRead: false
             }).save();
           }
         } catch (nurseErr) {
           console.warn("⚠️ Failed to notify nurse:", nurseErr.message);
-          // نستمر حتى لو فشل إشعار الممرض
         }
       }
     } catch (notifError) {
       console.error("⚠️ Failed to create notification:", notifError.message);
-      // نستمر حتى لو فشل الإشعار، الأهم هو حفظ الاستشارة
     }
 
-    // ✅ 9. الرد الناجح
+    // ✅ 9. الرد الناجح مع البيانات الكاملة
     return res.status(201).json({ 
       success: true,
       message: "تمت إضافة الاستشارة بنجاح",
@@ -142,7 +197,8 @@ router.post("/", async (req, res) => {
         doctorId: newConsultation.doctorId,
         patientId: newConsultation.patientId,
         type: newConsultation.type,
-        priority: newConsultation.priority,
+        triageLevel: newConsultation.triageLevel,
+        vitalSigns: newConsultation.vitalSigns,
         consultationDate: newConsultation.consultationDate,
         status: newConsultation.status,
         createdAt: newConsultation.createdAt
@@ -152,18 +208,10 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error("💥 Add Consultation Error:", error.message);
     
-    // ✅ معالجة أخطاء MongoDB الشائعة
-    if (error.name === 'CastError' && error.path === 'doctorId') {
+    if (error.name === 'CastError') {
       return res.status(400).json({ 
         success: false,
-        message: "Invalid doctor ID format"
-      });
-    }
-    
-    if (error.name === 'CastError' && error.path === 'patientId') {
-      return res.status(400).json({ 
-        success: false,
-        message: "Invalid patient ID format"
+        message: `Invalid ID format for field: ${error.path}`
       });
     }
     

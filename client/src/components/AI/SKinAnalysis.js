@@ -100,8 +100,8 @@ export default function SkinAnalysis() {
       setResult(data);
       toast.success('✅ تم التحليل بنجاح');
 
-      // حفظ النتيجة في السجل مع الترجمة
-      const diseaseName = data.disease || data.prediction;
+      // ✅ حفظ النتيجة في السجل مع الترجمة (متوافق مع كود البايثون الجديد)
+      const diseaseName = data.predicted_class_name || data.prediction;
       const arabicName = DISEASE_TRANSLATIONS[diseaseName] || diseaseName;
 
       const newEntry = {
@@ -196,7 +196,7 @@ export default function SkinAnalysis() {
               </div>
               
               <div className="disease-name">
-                {getTranslatedDisease(result.disease || result.prediction)}
+                {getTranslatedDisease(result.predicted_class_name || result.prediction)}
               </div>
 
               <div className="recommendation">

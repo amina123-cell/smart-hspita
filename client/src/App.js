@@ -30,13 +30,11 @@ import AddConsultationDoctor from "./components/Consultation/AddConsultationDoct
 // ✅ AI Component
 import SkinAnalysis from "./components/AI/SKinAnalysis";
 
-// ⚠️ Notification Component
-let NotificationBell = null;
-try {
-  NotificationBell = require("./components/Notifications/NotificationBell").default;
-} catch (e) {
-  console.warn("⚠️ NotificationBell not found, skipping...");
-}
+// ✅ Notification Components (مخصصة لكل دور)
+import DoctorNotificationBell from "./components/Notifications/DoctorNotificationBell";
+import AdminNotificationBell from "./components/Notifications/AdminNotificationBell";
+import NurseNotificationBell from "./components/Notifications/NurseNotificationBell";
+import PatientNotificationBell from "./components/Notifications/PatientNotificationBell";
 
 function App() {
   const [activeView, setActiveView] = useState("login");
@@ -103,7 +101,6 @@ function App() {
     const roleMap = {
       admin: [
         { id: "adminHome", label: "الرئيسية", icon: "🏠" },
-        { id: "skinAnalysis", label: "تحليل AI", icon: "🤖" },
         { id: "admin", label: "لوحة التحكم", icon: "⚙️" },
         { id: "addAdmin", label: "إضافة مسؤول", icon: "👤" },
         { id: "addDoctor", label: "إضافة طبيب", icon: "🩺" },
@@ -113,19 +110,21 @@ function App() {
       ],
       doctor: [
         { id: "doctorHome", label: "الرئيسية", icon: "🏠" },
-        { id: "skinAnalysis", label: "تحليل AI", icon: "🤖" },
+        { id: "skinAnalysis", label: "تحليل AI", icon: "🤖" }, // ✅ متاح للطبيب
         { id: "doctor", label: "المرضى", icon: "👥" },
         { id: "addPatient", label: "تسجيل مريض", icon: "➕" },
-        { id: "addConsultationDoctor", label: "إضافة استشارة", icon: "📋" } // ✅ تم تحديثه لنموذج الطبيب
+        { id: "addConsultationDoctor", label: "إضافة استشارة", icon: "📋" }
       ],
       nurse: [
         { id: "nurseHome", label: "الرئيسية", icon: "🏠" },
+        { id: "skinAnalysis", label: "تحليل AI", icon: "🤖" }, // ✅ متاح للممرض
         { id: "nurse", label: "المهام", icon: "📋" },
         { id: "addPatient", label: "تسجيل مريض", icon: "➕" },
         { id: "addConsultationNurse", label: "تسجيل استشارة", icon: "📋" }
       ],
       patient: [
         { id: "patientHome", label: "الرئيسية", icon: "🏠" },
+        { id: "skinAnalysis", label: "تحليل AI", icon: "🤖" }, // ✅ متاح للمريض
         { id: "addConsultationPatient", label: "طلب استشارة", icon: "📅" },
         { id: "patient", label: "ملفي الطبي", icon: "📄" }
       ]
@@ -209,12 +208,11 @@ function App() {
           
           {isLoggedIn && userRole && (
             <div className="user-info">
-              {userRole !== 'patient' && NotificationBell && (
-                <NotificationBell 
-                  userId={userId} 
-                  onNotificationClick={handleNotificationClick}
-                />
-              )}
+              {/* ✅ استخدام أجراس إشعارات مخصصة لكل دور */}
+              {userRole === 'doctor' && <DoctorNotificationBell userId={userId} onNavigate={setActiveView} />}
+              {userRole === 'admin' && <AdminNotificationBell userId={userId} onNavigate={setActiveView} />}
+              {userRole === 'nurse' && <NurseNotificationBell userId={userId} onNavigate={setActiveView} />}
+              {userRole === 'patient' && <PatientNotificationBell userId={userId} onNavigate={setActiveView} />}
               
               <span className="user-role-badge">
                 {userRole === 'admin' && '⚙️'}

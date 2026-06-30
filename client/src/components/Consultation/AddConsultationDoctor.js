@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import './AddConsultationDoctor.css';
 
+// ✅ تعريف مستويات التريج للواجهة
+const TRIAGE_LEVELS = [
+  { code: 'LEVEL_1', label: 'إنعاش', color: '#ef4444' },
+  { code: 'LEVEL_2', label: 'طارئ', color: '#f97316' },
+  { code: 'LEVEL_3', label: 'عاجل', color: '#eab308' },
+  { code: 'LEVEL_4', label: 'أقل إلحاحاً', color: '#3b82f6' },
+  { code: 'LEVEL_5', label: 'غير عاجل', color: '#22c55e' }
+];
+
 export default function AddConsultationDoctor({ doctorId, onNavigate }) {
-  // ✅ States للقوائم
   const [patients, setPatients] = useState([]);
   
-  // ✅ حالة النموذج
+  // ✅ حالة النموذج المحدثة لتشمل سبب التصنيف
   const [formData, setFormData] = useState({
     patientId: '',
     type: 'Instant',
-    priority: 2,
+    triageLevel: 'LEVEL_3',
+    vitalSigns: { systolicBP: '', heartRate: '', spO2: '', temperature: '' },
     notes: '',
-    consultationDate: ''
+    consultationDate: '',
+    reason: '' // ✅ حقل جديد لسبب التصنيف
   });
   
-  // ✅ حالة الواجهة
   const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
-  // ✅ جلب قائمة المرضى
+  // جلب قائمة المرضى
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,50 +40,61 @@ export default function AddConsultationDoctor({ doctorId, onNavigate }) {
     fetchData();
   }, []);
 
-  // ✅ تحديث formData
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // ✅ دالة مساعدة لعرض الاسم الكامل
-  const getFullName = (person) => {
-    if (!person) return "";
-    const first = person.firstName || '';
-    const last = person.lastName || person.familyName || ''; 
-    return `${first} ${last}`.trim();
+  // ✅ معالجة خاصة لحقول العلامات الحيوية
+  const handleVitalChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      vitalSigns: { ...prev.vitalSigns, [field]: value }
+    }));
   };
 
-  // ✅ معالجة الإرسال
+  const getFullName = (person) => {
+    if (!person) return "";
+    return `${person.firstName || ''} ${person.lastName || person.familyName || ''}`.trim();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ loading: true, success: false, error: '' });
 
     try {
-      // التحقق من البيانات
-      if (!doctorId || doctorId.length !== 24) throw new Error('معرف الطبيب غير صحيح');
-      if (!formData.patientId || formData.patientId.length !== 24) throw new Error('يرجى اختيار مريض');
-      if (!formData.notes.trim()) throw new Error('يرجى كتابة الملاحظات');
+      if (!doctorId || !formData.patientId || !formData.notes.trim()) 
+        throw new Error('يرجى إكمال جميع الحقول الإلزامية');
       
-      if (formData.type === 'Scheduled' && !formData.consultationDate) {
+      if (formData.type === 'Scheduled' && !formData.consultationDate) 
         throw new Error('يرجى تحديد تاريخ الاستشارة');
-      }
 
-      // تحديد التاريخ
-      const finalDate = formData.type === 'Instant' 
-        ? new Date().toISOString() 
-        : new Date(formData.consultationDate).toISOString();
+      // تصفية العلامات الحيوية الفارغة
+      const cleanVitals = Object.fromEntries(
+        Object.entries(formData.vitalSigns).filter(([_, v]) => v !== '')
+      );
 
+      // ✅ بناء payload مع تضمين userId و userModel للتدقيق
       const payload = {
         patientId: formData.patientId,
-        doctorId: doctorId, // ✅ يتم استخدام معرف الطبيب المسجل دخولاً تلقائياً
+        doctorId: doctorId,
         type: formData.type,
-        priority: Number(formData.priority),
+        triageLevel: formData.triageLevel,
+        vitalSigns: Object.keys(cleanVitals).length > 0 ? {
+          ...cleanVitals,
+          enteredBy: 'DOCTOR'
+        } : undefined,
+        triageSource: Object.keys(cleanVitals).length > 0 ? 'CLINICAL_MEASUREMENT' : 'SELF_REPORTED',
         notes: formData.notes.trim(),
-        consultationDate: finalDate
+        consultationDate: formData.type === 'Instant' 
+          ? new Date().toISOString() 
+          : new Date(formData.consultationDate).toISOString(),
+        // ✅ حقول التدقيق المطلوبة من الـ Backend
+        userId: doctorId,
+        userModel: 'Doctor',
+        reason: formData.reason || 'تصنيف أولي عند إنشاء الاستشارة'
       };
 
-      // إرسال الطلب
       const res = await fetch('http://localhost:5000/consultations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,14 +104,15 @@ export default function AddConsultationDoctor({ doctorId, onNavigate }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'فشل في إضافة الاستشارة');
 
-      // نجاح العملية
       setStatus({ loading: false, success: true, error: '' });
       setFormData(prev => ({
         ...prev,
         patientId: '',
+        triageLevel: 'LEVEL_3',
+        vitalSigns: { systolicBP: '', heartRate: '', spO2: '', temperature: '' },
         notes: '',
         consultationDate: '',
-        priority: 2
+        reason: ''
       }));
 
       setTimeout(() => {
@@ -136,7 +157,7 @@ export default function AddConsultationDoctor({ doctorId, onNavigate }) {
             <div className="radio-group">
               <label className={`radio-label ${formData.type === 'Instant' ? 'active' : ''}`}>
                 <input type="radio" name="type" value="Instant" checked={formData.type === 'Instant'} onChange={handleChange} />
-                ⚡ فورية
+                 فورية
               </label>
               <label className={`radio-label ${formData.type === 'Scheduled' ? 'active' : ''}`}>
                 <input type="radio" name="type" value="Scheduled" checked={formData.type === 'Scheduled'} onChange={handleChange} />
@@ -145,7 +166,62 @@ export default function AddConsultationDoctor({ doctorId, onNavigate }) {
             </div>
           </div>
 
-          {/* 🔹 التاريخ */}
+          {/* ✅ قسم التصنيف والعلامات الحيوية الجديد */}
+          <div className="triage-section">
+            <label>مستوى الخطورة (التريج) *</label>
+            <div className="triage-buttons">
+              {TRIAGE_LEVELS.map(level => (
+                <button
+                  key={level.code}
+                  type="button"
+                  className={`triage-btn ${formData.triageLevel === level.code ? 'selected' : ''}`}
+                  style={{ borderColor: level.color }}
+                  onClick={() => setFormData(prev => ({ ...prev, triageLevel: level.code }))}
+                >
+                  {level.label}
+                </button>
+              ))}
+            </div>
+
+            {/* ✅ حقل سبب التصنيف (ضروري للتدقيق) */}
+            <div className="form-group full-width">
+              <label>سبب التصنيف / الملاحظة السريرية *</label>
+              <textarea 
+                name="reason" 
+                value={formData.reason} 
+                onChange={handleChange} 
+                rows="2" 
+                required 
+                placeholder="مثال: ضغط دم منخفض جداً، تشوش ذهني، ألم صدري حاد..." 
+              />
+            </div>
+
+            {/* حقول العلامات الحيوية الاختيارية */}
+            <div className="vitals-mini-grid">
+              <input 
+                type="number" placeholder="ضغط الدم" 
+                value={formData.vitalSigns.systolicBP}
+                onChange={e => handleVitalChange('systolicBP', e.target.value)}
+              />
+              <input 
+                type="number" placeholder="النبض" 
+                value={formData.vitalSigns.heartRate}
+                onChange={e => handleVitalChange('heartRate', e.target.value)}
+              />
+              <input 
+                type="number" placeholder="التشبع %" 
+                value={formData.vitalSigns.spO2}
+                onChange={e => handleVitalChange('spO2', e.target.value)}
+              />
+              <input 
+                type="number" step="0.1" placeholder="الحرارة" 
+                value={formData.vitalSigns.temperature}
+                onChange={e => handleVitalChange('temperature', e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* 🔹 التاريخ (للحالات المجدولة فقط) */}
           {formData.type === 'Scheduled' && (
             <div className="form-group animate-fade">
               <label>تاريخ ووقت الاستشارة *</label>
@@ -153,16 +229,7 @@ export default function AddConsultationDoctor({ doctorId, onNavigate }) {
             </div>
           )}
 
-          {/* 🔹 الأولوية */}
-          <div className="form-group">
-            <label>الأولوية</label>
-            <select name="priority" value={formData.priority} onChange={handleChange}>
-              <option value={2}>⚪ عادية</option>
-              <option value={1}>🔴 عالية</option>
-            </select>
-          </div>
-
-          {/* 🔹 الملاحظات */}
+          {/* 🔹 الملاحظات التفصيلية */}
           <div className="form-group full-width">
             <label>ملاحظات وتشخيص أولي *</label>
             <textarea name="notes" value={formData.notes} onChange={handleChange} rows="5" required placeholder="اكتب هنا تفاصيل الحالة والتشخيص..." />

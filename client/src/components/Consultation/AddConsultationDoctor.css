@@ -9,14 +9,14 @@
 .consult-card {
   background: white;
   width: 100%;
-  max-width: 700px;
+  max-width: 750px; /* زدنا شوية فالعرض باش يجيو العلامات الحيوية مريحة */
   border-radius: 16px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
 .card-header.doctor-theme {
-  background: linear-gradient(135deg, #3b82f6, #2563eb); /* لون أزرق للأطباء */
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   padding: 1.5rem;
   text-align: center;
@@ -46,6 +46,7 @@
   font-size: 1rem;
   transition: all 0.2s;
   outline: none;
+  box-sizing: border-box; /* مهم باش ما يخرجوش الحقول من الإطار */
 }
 
 .form-group select:focus,
@@ -77,6 +78,51 @@
   background: #eff6ff;
   border-color: #3b82f6;
   color: #1d4ed8;
+  font-weight: bold;
+}
+
+/* ✅ ✅ ✅ قسم التصنيف والعلامات الحيوية الذكي */
+.triage-section {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+.triage-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.triage-btn {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+.triage-btn.selected {
+  color: white;
+  transform: scale(1.05);
+}
+
+.vitals-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.vitals-mini-grid input {
+  text-align: center;
   font-weight: bold;
 }
 
@@ -117,4 +163,9 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .triage-buttons { flex-direction: column; }
+  .form-actions { flex-direction: column; }
 }

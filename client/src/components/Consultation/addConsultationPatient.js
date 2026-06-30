@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'; // ✅ استيراد axios لتسهيل التعامل مع التوكن
 import './AddConsultationPatient.css';
 
 export default function AddConsultationPatient({ patientId, onNavigate }) {
   // ✅ States
   const [doctors, setDoctors] = useState([]);
   const [loadingDoctors, setLoadingDoctors] = useState(true);
+  const [lastVitals, setLastVitals] = useState(null); // ✅ حالة لحفظ آخر علامات حيوية
   
   const [formData, setFormData] = useState({
     doctorId: '',
-    type: 'Scheduled', // الافتراضي مجدولة للمريض ليعطي فرصة للاختيار
+    type: 'Scheduled',
     priority: 2,
     notes: '',
     consultationDate: ''
@@ -16,76 +18,93 @@ export default function AddConsultationPatient({ patientId, onNavigate }) {
   
   const [status, setStatus] = useState({ loading: false, success: false, error: '' });
 
-  // ✅ جلب قائمة الأطباء عند التحميل
+  // ✅ جلب قائمة الأطباء وبيانات المريض عند التحميل
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/doctors');
-        if (res.ok) {
-          setDoctors(await res.json());
+        const token = localStorage.getItem('token');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+        // جلب الأطباء
+        const doctorsRes = await fetch('http://localhost:5000/doctors', { headers });
+        if (doctorsRes.ok) setDoctors(await doctorsRes.json());
+
+        // ✅ جلب بيانات المريض للحصول على آخر العلامات الحيوية
+        const patientRes = await fetch(`http://localhost:5000/patients/${patientId}`, { headers });
+        if (patientRes.ok) {
+          const pData = await patientRes.json();
+          const patientData = pData.data || pData;
+          if (patientData.lastVitalSigns) {
+            setLastVitals(patientData.lastVitalSigns);
+          }
         }
       } catch (err) {
-        console.error('Failed to fetch doctors:', err);
+        console.error('Failed to fetch data:', err);
       } finally {
         setLoadingDoctors(false);
       }
     };
-    fetchDoctors();
-  }, []);
+    fetchData();
+  }, [patientId]);
 
-  // ✅ معالجة تغيير المدخلات
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // ✅ معالجة الإرسال
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ loading: true, success: false, error: '' });
 
     try {
-      // التحقق من البيانات
       if (!formData.doctorId) throw new Error('يرجى اختيار طبيب');
       if (!formData.notes.trim()) throw new Error('يرجى وصف الأعراض');
       if (formData.type === 'Scheduled' && !formData.consultationDate) {
         throw new Error('يرجى تحديد موعد للاستشارة المجدولة');
       }
 
-      // إعداد التاريخ
       const finalDate = formData.type === 'Instant' 
         ? new Date().toISOString() 
         : new Date(formData.consultationDate).toISOString();
 
+      const token = localStorage.getItem('token');
+      
+      // ✅ إعداد البيانات للإرسال مع العلامات الحيوية إن وجدت
       const payload = {
-        patientId, // ✅ نستخدم الـ ID الممرر من الـ Props مباشرة
+        patientId,
         doctorId: formData.doctorId,
         type: formData.type,
         priority: Number(formData.priority),
         notes: formData.notes.trim(),
-        consultationDate: finalDate
+        consultationDate: finalDate,
+        
+        // ✅ إضافة العلامات الحيوية والتصنيف التلقائي إذا كانت متوفرة
+        vitalSigns: lastVitals || undefined,
+        triageSource: lastVitals ? 'SELF_REPORTED' : undefined,
+        userId: patientId,
+        userModel: 'Patient'
       };
 
       // إرسال الطلب
-      const res = await fetch('http://localhost:5000/consultations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+      const res = await axios.post('http://localhost:5000/consultations', payload, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        }
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'فشل في حجز الاستشارة');
+      const data = res.data;
+      if (!res.status.toString().startsWith('2')) throw new Error(data.message || 'فشل في حجز الاستشارة');
 
       setStatus({ loading: false, success: true, error: '' });
       
-      // إعادة تعيين النموذج والعودة بعد ثانيتين
       setTimeout(() => {
         setStatus(p => ({ ...p, success: false }));
         if (onNavigate) onNavigate('patientHome');
       }, 2000);
 
     } catch (err) {
-      setStatus({ loading: false, success: false, error: err.message });
+      setStatus({ loading: false, success: false, error: err.response?.data?.message || err.message });
     }
   };
 
@@ -115,12 +134,7 @@ export default function AddConsultationPatient({ patientId, onNavigate }) {
             {loadingDoctors ? (
               <div className="loading-text">جاري تحميل الأطباء...</div>
             ) : (
-              <select 
-                name="doctorId" 
-                value={formData.doctorId} 
-                onChange={handleChange} 
-                required
-              >
+              <select name="doctorId" value={formData.doctorId} onChange={handleChange} required>
                 <option value="">-- اختر طبيباً --</option>
                 {doctors.map(doc => (
                   <option key={doc._id} value={doc._id}>
@@ -136,29 +150,17 @@ export default function AddConsultationPatient({ patientId, onNavigate }) {
             <label>نوع الاستشارة *</label>
             <div className="radio-group">
               <label className={`radio-label ${formData.type === 'Instant' ? 'active' : ''}`}>
-                <input 
-                  type="radio" 
-                  name="type" 
-                  value="Instant" 
-                  checked={formData.type === 'Instant'} 
-                  onChange={handleChange} 
-                />
+                <input type="radio" name="type" value="Instant" checked={formData.type === 'Instant'} onChange={handleChange} />
                 ⚡ فورية (عاجلة)
               </label>
               <label className={`radio-label ${formData.type === 'Scheduled' ? 'active' : ''}`}>
-                <input 
-                  type="radio" 
-                  name="type" 
-                  value="Scheduled" 
-                  checked={formData.type === 'Scheduled'} 
-                  onChange={handleChange} 
-                />
+                <input type="radio" name="type" value="Scheduled" checked={formData.type === 'Scheduled'} onChange={handleChange} />
                 📅 مجدولة (موعد مسبق)
               </label>
             </div>
           </div>
 
-          {/* 🔹 التاريخ والوقت (يظهر فقط إذا كانت مجدولة) */}
+          {/* 🔹 التاريخ والوقت */}
           {formData.type === 'Scheduled' && (
             <div className="form-group animate-fade">
               <label>تاريخ ووقت الموعد المفضل *</label>
@@ -182,20 +184,23 @@ export default function AddConsultationPatient({ patientId, onNavigate }) {
               onChange={handleChange} 
               rows="5" 
               required 
-              placeholder="اكتب هنا تفاصيل ما تشعر به، متى بدأت الأعراض، وأي معلومات أخرى تساعد الطبيب..." 
+              placeholder="اكتب هنا تفاصيل ما تشعر به، متى بدأت الأعراض..." 
             />
           </div>
+
+          {/* ✅ عرض ملخص العلامات الحيوية إن وجدت */}
+          {lastVitals && (
+            <div className="vitals-summary-preview">
+              <small>🩺 سيتم إرفاق آخر قياساتك المسجلة: ضغط {lastVitals.systolicBP} | نبض {lastVitals.heartRate}</small>
+            </div>
+          )}
 
           {/* 🔘 الأزرار */}
           <div className="form-actions">
             <button type="submit" className="btn-submit" disabled={status.loading}>
               {status.loading ? '⏳ جاري الإرسال...' : '🚀 تأكيد الطلب'}
             </button>
-            <button 
-              type="button" 
-              className="btn-cancel" 
-              onClick={() => onNavigate?.('patientHome')}
-            >
+            <button type="button" className="btn-cancel" onClick={() => onNavigate?.('patientHome')}>
               إلغاء
             </button>
           </div>

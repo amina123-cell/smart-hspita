@@ -1,0 +1,38 @@
+.critical-alert-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.alert-box {
+  background: #fff;
+  border-left: 6px solid #ef4444;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 350px;
+  animation: slideIn 0.5s ease-out;
+}
+
+.pulse-animation {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.btn-dismiss {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}

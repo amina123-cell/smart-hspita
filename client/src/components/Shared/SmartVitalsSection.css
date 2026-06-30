@@ -1,0 +1,94 @@
+.vitals-display-card, .vitals-edit-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 0.5rem;
+}
+
+.card-header h4 { margin: 0; color: #334155; }
+
+.btn-edit, .btn-cancel {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-edit { background: #eff6ff; color: #2563eb; }
+.btn-edit:hover { background: #dbeafe; }
+.btn-cancel { background: #f1f5f9; color: #64748b; }
+
+/* شبكة العرض */
+.vitals-grid-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 15px;
+}
+
+.vital-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.vital-box:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+.vital-label { display: block; font-size: 0.85rem; color: #64748b; margin-bottom: 5px; }
+.vital-value { display: block; font-size: 1.3rem; font-weight: bold; }
+.vital-value small { font-size: 0.7rem; font-weight: normal; opacity: 0.8; }
+.vital-status-text { display: block; font-size: 0.75rem; margin-top: 4px; font-weight: 600; }
+
+/* شبكة التعديل */
+.vitals-grid-edit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.input-wrapper {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper input {
+  border: none;
+  outline: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: transparent;
+  width: 100%;
+}
+
+.btn-save {
+  width: 100%;
+  padding: 10px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-save:hover { background: #059669; }
+
+.no-data-msg { text-align: center; color: #94a3b8; grid-column: 1 / -1; }
+.entered-by-info { display: block; margin-top: 10px; color: #94a3b8; font-style: italic; text-align: left; }
