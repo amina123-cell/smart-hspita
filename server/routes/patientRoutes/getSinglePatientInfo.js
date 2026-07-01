@@ -1,5 +1,5 @@
 const connectDB = require("../../database/dbconnection");
-const Patient = require("../../models/PatientModel"); // ✅ حرف كبير 'P'
+const Patient = require("../../models/patientModel"); // ✅ حرف كبير 'P'
 const express = require("express");
 
 const router = express.Router();
