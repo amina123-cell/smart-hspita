@@ -1,5 +1,5 @@
 const connectDB = require("../../database/dbconnection");
-const Patient = require("../../models/PatientModel"); // ✅ تأكد من اسم الملف: PatientModel.js أو patientModel.js
+const Patient = require("../../models/patientModel"); // ✅ تأكد من اسم الملف: PatientModel.js أو patientModel.js
 const express = require("express");
 
 const router = express.Router();
