@@ -1,5 +1,5 @@
 const connectDB = require("../../database/dbconnection");
-const nurse = require("../../models/nurseModel");
+const nurse = require("../../models/NurseModel");
 const express = require("express");
 
 const router = express.Router();
