@@ -1,7 +1,7 @@
 {
   "name": "react-fullstack",
   "version": "1.0.0",
-  "description": "Full-stack React + Express application for MediCare Pro",
+  "description": "Full-stack React + Express application",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,13 +9,14 @@
     "client": "npm start --prefix client",
     "dev": "concurrently -c \"blue,magenta\" -n \"SERVER,CLIENT\" \"npm run server\" \"npm run client\"",
     "install:all": "npm install && npm install --prefix server && npm install --prefix client",
-    
-    "build": "cd client && npm install && npm run build",
-    
-    "start": "NODE_ENV=production node server/Server.js"
+    "build": "npm run build --prefix client"
   },
-  "keywords": ["react", "express", "fullstack", "healthcare"],
-  "author": "Zaid Hawali",
+  "keywords": [
+    "react",
+    "express",
+    "fullstack"
+  ],
+  "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
@@ -30,10 +31,6 @@
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "react-toastify": "^11.1.0",
-    "uuid": "^14.0.0",
-    "mongoose": "^8.0.0", 
-    "dotenv": "^16.3.1",
-    "multer": "^1.4.5-lts.1",
-    "child_process": "^1.0.2"
+    "uuid": "^14.0.0"
   }
 }
