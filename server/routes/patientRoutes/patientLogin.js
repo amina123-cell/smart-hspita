@@ -1,6 +1,10 @@
  //server/routes/patientRoutes/patientLogin.js
 const connectDB = require("../../database/dbconnection");
 const Patient = require("../../models/patientModel");
+
+const path = require('path');
+// ✅ هاد السطر غادي يخدم فـ Windows و Linux (Render) بلا مشاكل
+const Patient = require(path.join(__dirname, '..', '..', 'models', 'PatientModel'));
 const express = require("express");
 const jwt = require("jsonwebtoken");
 
