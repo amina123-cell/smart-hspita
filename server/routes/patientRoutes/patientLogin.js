@@ -1,6 +1,14 @@
 // server/routes/patientRoutes/patientLogin.js
 const connectDB = require("../../database/dbconnection");
-const Patient = require("../../models/PatientModel");
+//const Patient = require("../../models/patientModel");
+
+const path = require('path');
+// ✅ صح: كيحسب المسار انطلاقاً من المجلد الحالي (__dirname)
+const Patient = require(path.join(__dirname, '../../models/PatientModel'));
+
+
+
+
 const express = require("express");
 const jwt = require("jsonwebtoken");
 
