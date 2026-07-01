@@ -1,6 +1,6 @@
 const connectDB = require("../../database/dbconnection");
 const Patient = require("../../models/patientModel");
-const Consultation = require("../../models/consultationModel"); // ✅ استيراد موديل الاستشارات
+const Consultation = require("../../models/ConsultationModel"); // ✅ استيراد موديل الاستشارات
 const Notification = require("../../models/NotificationModel"); // ✅ استيراد موديل الإشعارات
 const express = require("express");
 

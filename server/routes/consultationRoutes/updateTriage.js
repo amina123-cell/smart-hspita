@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Consultation = require('../../models/consultationModel');
+const Consultation = require('../../models/ConsultationModel');
 const TriageLog = require('../../models/triageLogModel'); // ✅ استيراد موديل السجل
 
 // ✅ تحديث تصنيف الاستشارة والعلامات الحيوية

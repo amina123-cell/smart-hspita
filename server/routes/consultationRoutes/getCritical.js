@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Consultation = require('../../models/consultationModel');
+const Consultation = require('../../models/ConsultationModel');
 
 // جلب الحالات الحرجة فقط (LEVEL_1 & LEVEL_2)
 router.get('/', async (req, res) => {
