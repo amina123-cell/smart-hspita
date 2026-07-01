@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
   connectDB();
 
   try {
-    const patient = await Patient.findOne({ phoneNumber });
+    const patients = await Patient.findOne({ phoneNumber });
     if (!patient || patient.password !== password) {
       return res.status(401).json({ message: "Error: Incorrect credentials" });
     }
