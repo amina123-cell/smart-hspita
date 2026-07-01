@@ -3,7 +3,7 @@ const Notification = require("../../models/NotificationModel");
 const TriageLog = require("../../models/triageLogModel");
 const Patient = require("../../models/patientModel");
 const Doctor = require("../../models/doctorModel");
-const Admin = require("../../models/adminModel"); // ✅ استيراد موديل الأدمن
+const Admin = require("../../models/AdminModel"); // ✅ استيراد موديل الأدمن
 const mongoose = require("mongoose");
 const express = require("express");
 
